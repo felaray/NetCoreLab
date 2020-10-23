@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Localization.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,36 +14,25 @@ namespace Localization.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly IStringLocalizer<UserController> _localizer;
+
+
+        public UserController(IStringLocalizer<UserController> localizer)
+        {
+            _localizer = localizer;
+        }
+
         // GET: api/<UserController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public string Get()
         {
-            return new string[] { "value1", "value2" };
+            return _localizer["Test"];
         }
 
-        // GET api/<UserController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<UserController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public string Post(TestRequest model)
         {
-        }
-
-        // PUT api/<UserController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return _localizer["Test"];
         }
     }
 }

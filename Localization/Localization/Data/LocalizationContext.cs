@@ -14,6 +14,6 @@ namespace Localization.Data
         {
         }
 
-        public DbSet<Localization.Models.Test> Test { get; set; }
+        public DbSet<AppUser> Test { get; set; }
     }
 }

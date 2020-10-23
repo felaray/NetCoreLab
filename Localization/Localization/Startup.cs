@@ -15,6 +15,10 @@ using Localization.Data;
 using System.IO;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Razor;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace Localization
 {
@@ -30,7 +34,10 @@ namespace Localization
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddControllers()
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -62,6 +69,15 @@ namespace Localization
 
             services.AddDbContext<LocalizationContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("LocalizationContext")));
+
+            //services.Configure<RequestLocalizationOptions>(options =>
+            //{
+            //    var supportedCultures = new[] { "en-US", "zh-TW" };
+            //    options.SetDefaultCulture(supportedCultures[0])
+            //        .AddSupportedCultures(supportedCultures)
+            //        .AddSupportedUICultures(supportedCultures);
+            //});
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,16 +91,25 @@ namespace Localization
 
             app.UseHttpsRedirection();
 
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-            // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 c.RoutePrefix = string.Empty;
             });
+
+            var supportedCultures = new CultureInfo[] {
+                new CultureInfo("en-US"),
+                new CultureInfo("zh-TW"),
+            };
+            app.UseRequestLocalization(new RequestLocalizationOptions()
+            {
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures,
+                //當預設Provider偵測不到用戶支持上述Culture的話，就會是↓
+                DefaultRequestCulture = new RequestCulture("zh-CN")//Default UICulture、Culture 
+            });
+            app.UseStaticFiles();
 
             app.UseRouting();
 
@@ -96,6 +121,7 @@ namespace Localization
             });
 
 
+            app.UseRequestLocalization();
         }
     }
 }

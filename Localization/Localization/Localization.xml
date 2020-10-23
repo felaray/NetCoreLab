@@ -4,5 +4,10 @@
         <name>Localization</name>
     </assembly>
     <members>
+        <member name="P:Localization.Models.TestRequest.FieldB">
+            <summary>
+            Initializes a new instance of the <see cref="!:LocalizedIdentityErrorDescriber"/>
+            </summary>
+        </member>
     </members>
 </doc>

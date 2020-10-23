@@ -35,8 +35,8 @@ namespace Localization
 #if DEBUG
                 //context.Database.EnsureDeleted();
 #endif
-                //context.Database.EnsureCreated();
-                context.Database.Migrate();
+                context.Database.EnsureCreated();
+                //context.Database.Migrate();
 
 
             }
