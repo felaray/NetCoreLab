@@ -16,4 +16,11 @@ namespace AutoMapperForEFcore.Models
         public int Id { get; set; }
         public string Msg { get; set; }
     }
+
+    public class AppUserDTO
+    {
+        public int Id { get; set; }
+        public string UserName { get; set; }
+        public List<Log> Logs { get; set; }
+    }
 }

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using AutoMapperForEFcore.Data;
 using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 
 namespace AutoMapperForEFcore
 {
@@ -36,7 +37,38 @@ namespace AutoMapperForEFcore
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen();
 
-            services.AddAutoMapper(typeof(Startup));
+            //var serviceProvider = services.BuildServiceProvider();
+
+            //services.AddAutoMapper((serviceProvider, automapper) =>
+            //{
+            //    automapper.AddCollectionMappers();
+            //    automapper.UseEntityFrameworkCoreModel<AutoMapperForEFcoreContext>(serviceProvider);
+            //}, typeof(Startup));
+
+            // Auto Mapper Configurations
+            //var mapperConfig = new MapperConfiguration(mc =>
+            //{
+            //    mc.AddProfile(new MappingProfile());
+            //});
+
+            //IMapper mapper = mapperConfig.CreateMapper();
+            //services.AddSingleton(mapper);
+
+            //Mapper.Initialize(cfg => cfg.AddProfile<MappingProfile>());
+
+            //services.AddAutoMapper();
+
+            //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddAutoMapper((serviceProvider, automapper) =>
+            {
+                automapper.AddCollectionMappers();
+                automapper.UseEntityFrameworkCoreModel<AutoMapperForEFcoreContext>(serviceProvider);
+            }, AppDomain.CurrentDomain.GetAssemblies());
+
+            var serviceProvider = services.BuildServiceProvider();
+
+            //services.AddScoped<ILogger>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
