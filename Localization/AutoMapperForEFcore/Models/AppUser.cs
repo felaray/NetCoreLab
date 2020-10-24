@@ -13,6 +13,7 @@ namespace AutoMapperForEFcore.Models
 
     public class Log
     {
+        public int AppUserId { get; set; }
         public int Id { get; set; }
         public string Msg { get; set; }
     }
@@ -23,4 +24,30 @@ namespace AutoMapperForEFcore.Models
         public string UserName { get; set; }
         public List<Log> Logs { get; set; }
     }
+
+    public class LogDTO : Log
+    {
+    }
+
+    //public class UpdateUserDTO
+    //{
+    //    public int Id { get; set; }
+    //    public string UserName { get; set; }
+    //    public List<Log> Logs { get; set; }
+    //}
+
+    //public class AppUserViewModel
+    //{
+    //    public int Id { get; set; }
+    //    public string UserName { get; set; }
+    //    public List<Log> Logs { get; set; }
+    //    public int LogCount
+    //    {
+    //        get
+    //        {
+    //            return Logs.Count();
+    //        }
+    //    }
+    //}
+
 }

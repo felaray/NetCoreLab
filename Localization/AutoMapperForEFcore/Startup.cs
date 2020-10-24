@@ -29,7 +29,7 @@ namespace AutoMapperForEFcore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddDbContext<AutoMapperForEFcoreContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("AutoMapperForEFcoreContext")));
@@ -37,36 +37,13 @@ namespace AutoMapperForEFcore
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen();
 
-            //var serviceProvider = services.BuildServiceProvider();
-
-            //services.AddAutoMapper((serviceProvider, automapper) =>
-            //{
-            //    automapper.AddCollectionMappers();
-            //    automapper.UseEntityFrameworkCoreModel<AutoMapperForEFcoreContext>(serviceProvider);
-            //}, typeof(Startup));
-
-            // Auto Mapper Configurations
-            //var mapperConfig = new MapperConfiguration(mc =>
-            //{
-            //    mc.AddProfile(new MappingProfile());
-            //});
-
-            //IMapper mapper = mapperConfig.CreateMapper();
-            //services.AddSingleton(mapper);
-
-            //Mapper.Initialize(cfg => cfg.AddProfile<MappingProfile>());
-
-            //services.AddAutoMapper();
-
-            //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
             services.AddAutoMapper((serviceProvider, automapper) =>
             {
                 automapper.AddCollectionMappers();
                 automapper.UseEntityFrameworkCoreModel<AutoMapperForEFcoreContext>(serviceProvider);
             }, AppDomain.CurrentDomain.GetAssemblies());
 
-            var serviceProvider = services.BuildServiceProvider();
+            //var serviceProvider = services.BuildServiceProvider();
 
             //services.AddScoped<ILogger>();
         }

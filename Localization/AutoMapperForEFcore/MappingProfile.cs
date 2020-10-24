@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using AutoMapperForEFcore.Models;
+using System.Security.Cryptography;
 
 namespace AutoMapperForEFcore
 {
@@ -7,10 +9,13 @@ namespace AutoMapperForEFcore
     {
         public MappingProfile()
         {
-            AllowNullDestinationValues = true;
 
-            CreateMap<AppUser, AppUserDTO>().IgnoreAllPropertiesWithAnInaccessibleSetter();
-            CreateMap<AppUserDTO, AppUser>().IgnoreAllPropertiesWithAnInaccessibleSetter();
+            CreateMap<AppUser, AppUserDTO>().EqualityComparison((odto, o) => odto.Id == o.Id);
+            CreateMap<AppUserDTO, AppUser>().EqualityComparison((odto, o) => odto.Id == o.Id);
+
+            CreateMap<LogDTO, Log>().EqualityComparison((odto, o) => odto.Id == o.Id);
+            CreateMap<Log, LogDTO>().EqualityComparison((odto, o) => odto.Id == o.Id);
+
         }
     }
 }

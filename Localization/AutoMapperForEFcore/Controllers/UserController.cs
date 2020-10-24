@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.EntityFrameworkCore;
+using AutoMapper.EquivalencyExpression;
+using AutoMapper.QueryableExtensions;
 using AutoMapperForEFcore.Data;
 using AutoMapperForEFcore.Models;
 using Microsoft.AspNetCore.Http;
@@ -29,18 +31,16 @@ namespace AutoMapperForEFcore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> NewUser(AppUser model)
+        public async Task<IActionResult> NewUser(AppUserDTO model)
         {
             try
             {
-
-                for (int x = 0; x < 9; x++)
-                {
-                    model.Logs.Add(new Log { Msg = "test" + x });
-                }
-
-                _context.AppUser.Add(model);
+                var vm = _mapper.Map<AppUser>(model);
+                _context.AppUser.Add(vm);
                 await _context.SaveChangesAsync();
+                //_mapper.ConfigurationProvider.AssertConfigurationIsValid();
+                //await _context.AppUser.Persist(_mapper).InsertOrUpdateAsync(vm);
+
                 return Ok();
             }
             catch (Exception ex)
@@ -59,55 +59,76 @@ namespace AutoMapperForEFcore.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> UserList(int id)
         {
-            var result = await _context.AppUser.SingleOrDefaultAsync(c => c.Id == id);
+            // find user and output v
+            var result = await _mapper.ProjectTo<AppUserDTO>(_context.AppUser).SingleOrDefaultAsync(c => c.Id == id);
             return Ok(result);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id)
+        [HttpPut]
+        public async Task<IActionResult> UpdateUser(AppUserDTO model)
         {
-
-            var result = await _context.AppUser.Include(c => c.Logs).SingleOrDefaultAsync(c => c.Id == id);
-            _logger.LogInformation("Before");
-            foreach (var item in result.Logs)
-            {
-                var infoMsg = $"{item.Id},{item.Msg}";
-                _logger.LogInformation(infoMsg);
-            }
-
-            if (result.Logs != null)
-                result.Logs.RemoveRange(0, 1);
-            result.Logs.Add(new Log { Msg = "test" + Guid.NewGuid() });
-
-            //_context.Update.
-            //_context.Update(result);
-            //await _context.SaveChangesAsync();
-
-            var vm = _mapper.Map<AppUserDTO>(result);
             try
             {
 
+                var data = await _context.AppUser.Include(c => c.Logs)
+                        .AsNoTracking()
+                        .SingleOrDefaultAsync(c => c.Id == model.Id);
 
-                var vm1 = _mapper.Map<AppUser>(vm);
-                //_mapper.ConfigurationProvider.AssertConfigurationIsValid();
+                if (data == null)
+                    return NotFound();
 
-                await _context.AppUser.Persist<AppUser>(_mapper).InsertOrUpdateAsync(vm);
-                //await _context.AppUser.Persist<AppUser>(_mapper).RemoveAsync(vm);
-
-                result = await _context.AppUser.Include(c => c.Logs).SingleOrDefaultAsync(c => c.Id == id);
-
-                _logger.LogInformation("After");
-                foreach (var item in result.Logs)
+                var mapper = new MapperConfiguration(cfg =>
                 {
-                    var infoMsg = $"{item.Id},{item.Msg}";
-                    _logger.LogInformation(infoMsg);
-                }
+                    cfg.AddCollectionMappers();
+                    cfg.CreateMap<AppUserDTO, AppUser>()
+                    .EqualityComparison((odto, o) => odto.Id == o.Id);
+
+                    cfg.CreateMap<LogDTO, Log>()
+                    .EqualityComparison((odto, o) => odto.Id == o.Id);
+
+                }).CreateMapper();
+                var result = mapper.Map<AppUserDTO, AppUser>(model, data);
+
+                await _context.AppUser.Persist(mapper).InsertOrUpdateAsync(model);
+                //await _context.AppUser.Persist(mapper).RemoveAsync(result);
+                await _context.SaveChangesAsync();
+                data = await _context.AppUser.Include(c => c.Logs)
+                    .AsNoTracking()
+                   .SingleOrDefaultAsync(c => c.Id == model.Id);
+
+                return Ok(data);
+
+                //_logger.LogInformation("Before");
+                //foreach (var item in result.Logs)
+                //{
+                //    var infoMsg = $"{item.Id},{item.Msg}";
+                //    _logger.LogInformation(infoMsg);
+                //}
+
+                //var vm = _mapper.Map<UpdateUserDTO>(model);
+
+                //var data = await _context.AppUser.Include(c => c.Logs).SingleOrDefaultAsync(c => c.Id == model.Id);
+                //var result = _mapper.Map<AppUser, AppUserDTO>(data, model);
+
+                //await _context.AppUser.Persist(_mapper).InsertOrUpdateAsync(model);
+                //await _context.AppUser.Persist(_mapper).RemoveAsync(model);
+                //_context.Update(vm);
+                //await _context.SaveChangesAsync();
+                //var result = await _context.AppUser.Include(c => c.Logs).SingleOrDefaultAsync(c => c.Id == model.Id);
+
+                //_logger.LogInformation("After");
+                //foreach (var item in result.Logs)
+                //{
+                //    var infoMsg = $"{item.Id},{item.Msg}";
+                //    _logger.LogInformation(infoMsg);
+                //}
 
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+
+                return BadRequest(ex.InnerException == null ? ex.Message : ex.InnerException.Message);
             }
         }
     }

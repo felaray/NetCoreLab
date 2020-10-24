@@ -32,7 +32,7 @@ namespace AutoMapperForEFcore
                 var context = services.GetRequiredService<AutoMapperForEFcoreContext>();
 
 #if DEBUG
-                context.Database.EnsureDeleted();
+                //context.Database.EnsureDeleted();
 #endif
                 context.Database.EnsureCreated();
                 //context.Database.Migrate();
