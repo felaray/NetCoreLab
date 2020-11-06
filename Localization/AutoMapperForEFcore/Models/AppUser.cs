@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace AutoMapperForEFcore.Models
@@ -13,7 +14,8 @@ namespace AutoMapperForEFcore.Models
 
     public class Log
     {
-        public int AppUserId { get; set; }
+        //[Json]
+        //public int AppUserId { get; set; }
         public int Id { get; set; }
         public string Msg { get; set; }
     }

@@ -41,7 +41,9 @@ namespace AutoMapperForEFcore.Controllers
                 //_mapper.ConfigurationProvider.AssertConfigurationIsValid();
                 //await _context.AppUser.Persist(_mapper).InsertOrUpdateAsync(vm);
 
-                return Ok();
+                var result = await _mapper.ProjectTo<AppUserDTO>(_context.AppUser).OrderBy(c=>c.Id).LastOrDefaultAsync();
+
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -77,20 +79,22 @@ namespace AutoMapperForEFcore.Controllers
                 if (data == null)
                     return NotFound();
 
-                var mapper = new MapperConfiguration(cfg =>
-                {
-                    cfg.AddCollectionMappers();
-                    cfg.CreateMap<AppUserDTO, AppUser>()
-                    .EqualityComparison((odto, o) => odto.Id == o.Id);
+                //var mapper = new MapperConfiguration(cfg =>
+                //{
+                //    cfg.AddCollectionMappers();
+                //    cfg.CreateMap<AppUserDTO, AppUser>()
+                //    .EqualityComparison((odto, o) => odto.Id == o.Id);
 
-                    cfg.CreateMap<LogDTO, Log>()
-                    .EqualityComparison((odto, o) => odto.Id == o.Id);
+                //    cfg.CreateMap<LogDTO, Log>()
+                //    .EqualityComparison((odto, o) => odto.Id == o.Id);
 
-                }).CreateMapper();
-                var result = mapper.Map<AppUserDTO, AppUser>(model, data);
+                //}).CreateMapper();
+                //var result = mapper.Map<AppUserDTO, AppUser>(model, data);
+                await _context.AppUser.Persist(_mapper).InsertOrUpdateAsync(model);
+                await _context.AppUser.Persist(_mapper).RemoveAsync(model);
 
-                await _context.AppUser.Persist(mapper).InsertOrUpdateAsync(model);
-                //await _context.AppUser.Persist(mapper).RemoveAsync(result);
+
+
                 await _context.SaveChangesAsync();
                 data = await _context.AppUser.Include(c => c.Logs)
                     .AsNoTracking()
@@ -123,7 +127,7 @@ namespace AutoMapperForEFcore.Controllers
                 //    _logger.LogInformation(infoMsg);
                 //}
 
-                return Ok(result);
+                //return Ok(result);
             }
             catch (Exception ex)
             {

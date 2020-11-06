@@ -33,7 +33,7 @@ namespace Localization
                 var context = services.GetRequiredService<LocalizationContext>();
 
 #if DEBUG
-                //context.Database.EnsureDeleted();
+                context.Database.EnsureDeleted();
 #endif
                 context.Database.EnsureCreated();
                 //context.Database.Migrate();

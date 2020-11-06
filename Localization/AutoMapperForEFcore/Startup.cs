@@ -31,8 +31,15 @@ namespace AutoMapperForEFcore
         {
             services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-            services.AddDbContext<AutoMapperForEFcoreContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("AutoMapperForEFcoreContext")));
+            //services.AddDbContext<AutoMapperForEFcoreContext>(options =>
+            //        options.UseSqlServer(Configuration.GetConnectionString("AutoMapperForEFcoreContext")));
+
+            services
+                .AddEntityFrameworkSqlServer() //Use your EF CORE provider here
+                .AddDbContext<AutoMapperForEFcoreContext>(
+                options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("AutoMapperForEFcoreContext"))
+                ); //Use your context here
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen();
