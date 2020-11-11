@@ -3,14 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localization", "Localization\Localization.csproj", "{99C3DF93-580E-481D-9F4A-F3CB4D0523A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Localization", "Localization\Localization.csproj", "{99C3DF93-580E-481D-9F4A-F3CB4D0523A4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9321B584-DA52-45AF-916B-ADAFBFEA6423}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoMapperForEFcore", "AutoMapperForEFcore\AutoMapperForEFcore.csproj", "{044BF844-6792-4064-BAE8-CC6DEED7C396}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoMapperForEFcore", "AutoMapperForEFcore\AutoMapperForEFcore.csproj", "{044BF844-6792-4064-BAE8-CC6DEED7C396}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExceptionLab", "ExceptionLab\ExceptionLab.csproj", "{169D132D-8EE8-4109-82A5-E7C9CDCF68D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +28,10 @@ Global
 		{044BF844-6792-4064-BAE8-CC6DEED7C396}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{044BF844-6792-4064-BAE8-CC6DEED7C396}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{044BF844-6792-4064-BAE8-CC6DEED7C396}.Release|Any CPU.Build.0 = Release|Any CPU
+		{169D132D-8EE8-4109-82A5-E7C9CDCF68D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{169D132D-8EE8-4109-82A5-E7C9CDCF68D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{169D132D-8EE8-4109-82A5-E7C9CDCF68D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{169D132D-8EE8-4109-82A5-E7C9CDCF68D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
